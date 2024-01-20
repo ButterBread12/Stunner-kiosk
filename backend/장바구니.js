@@ -1,29 +1,21 @@
 const express = require('express');
 const { Pool } = require('pg');
-const cors = require('cors');  // cors 모듈 추가
 
 const app = express();
-const port = 8000;
+const port = 3000;
 
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
-  database: 'kiosk',
-  password: 'goldenglow290$',
+  database: 'postgres',
+  password: 'tlswo3850',
   port: 5432,
 });
 
-// CORS 미들웨어 추가
-app.use(cors({
-  origin: 'http://localhost:8080', // 프론트엔드 서버의 도메인으로 변경
-  methods: 'GET',
-}));
-
-app.get('/data/:division', async (req, res) => {
+app.get('/api/data', async (req, res) => {
   try {
-    const division = req.params.division;
     const client = await pool.connect();
-    const result = await client.query(`SELECT * FROM product WHERE p_division = '${division}'`);
+    const result = await client.query('SELECT * FROM hamburgers'); // 테이블 이름을 실제 테이블 이름으로 변경
     const data = result.rows;
     client.release();
 
