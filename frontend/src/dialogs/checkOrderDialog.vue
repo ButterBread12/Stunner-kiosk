@@ -56,48 +56,48 @@
   
   <style scoped>
   .order-summary {
-    max-width: 600px;
+    max-width: 37.5em;
     margin: 0 auto;
     background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    border-radius: 0.625em;
+    box-shadow: 0 0 0.625em rgba(0, 0, 0, 0.1);
+    padding: 1.25em;
   }
   
   .order-summary-title {
-    font-size: 24px;
+    font-size: 1.5em;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 0.9375em;
   }
   
   .order-details {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 16px;
+    margin-bottom: 0.625em;
+    font-size: 1em;
     background-color: #eee;
-    padding: 10px;
-    border-radius: 5px;
+    padding: 0.625em;
+    border-radius: 0.3125em;
   }
   
   .order-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 5px;
+    margin-bottom: 0.625em;
+    padding: 0.625em;
+    border-radius: 0.3125em;
   }
   
   .item-name,
   .item-count,
   .item-price {
     flex: 1;
-    font-size: 16px;
+    font-size: 1em;
   }
   
   .item-count {
-    margin-left: 35px;
+    margin-left: 2.1875em;
     text-align: center;
   }
   
@@ -107,29 +107,29 @@
   }
   
   .total-price {
-    font-size: 18px;
+    font-size: 1.125em;
     font-weight: bold;
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 5px;
+    margin-top: 0.9375em;
+    padding: 0.625em;
+    border-radius: 0.3125em;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 2px solid #3498db;
+    border: 0.125em solid #3498db;
   }
   
   .total-price-label {
-    font-size: 16px;
+    font-size: 1em;
   }
   
   .total-price-value {
-    font-size: 18px;
+    font-size: 1.125em;
     font-weight: bold;
   }
   
   .card-actions {
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
+    margin-top: 1.25em;
   }
-  </style> 
+</style>

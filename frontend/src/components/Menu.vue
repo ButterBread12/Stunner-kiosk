@@ -7,7 +7,6 @@
         </div>
         <div>
           <h2>{{ item.p_name }}</h2>
-          <p class="ingredients">{{ item.p_ingredient }}</p>
           <div class="item-price">{{ Math.floor(item.p_price) }}원</div>
         </div>
       </li>
@@ -57,11 +56,10 @@ export default {
 <style scoped>
 .kiosk-menu { 
   /* 메뉴 전체 영역 스타일 */
-  
   background-color: #f8f8f8;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 1.25em;
+  border-radius: 0.625em;
+  box-shadow: 0 0 0.625em rgba(0, 0, 0, 0.1);
   flex: 1 1 50%;
 }
 
@@ -75,14 +73,14 @@ export default {
   /* 각 메뉴 항목 스타일 */
   max-width: 40%;
   justify-content: space-between;
-  padding: 15px;
+  padding: 0.9375em;
   background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 15px;
+  border-radius: 0.3125em;
+  box-shadow: 0 0.125em 0.25em rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.9375em;
   cursor: pointer;
   display: inline-block;
-  margin-right: 3%;
+  margin-right: 0.1875em;
   flex-wrap: wrap; /* 요소가 너무 많을 때 다음 줄로 넘어갈 수 있도록 설정 */
 }
 
@@ -94,20 +92,20 @@ export default {
 .menu-item h2 {
   /* 메뉴 항목 이름 스타일 */
   margin: 0;
-  font-size: 18px;
+  font-size: 1.125em;
 }
 
 .ingredients {
   /* 메뉴 항목 재료 스타일 */
-  margin: 5px 0;
-  font-size: 14px;
+  margin: 0.3125em 0;
+  font-size: 0.875em;
   color: #555;
 }
 
 .item-price {
   /* 메뉴 항목 가격 스타일 */
   flex: 1;
-  font-size: 18px;
+  font-size: 1.125em;
   font-weight: bold;
   color: #007bff;
 }
