@@ -89,6 +89,7 @@ export default {
 
 <style scoped>
 .order-container {
+  /* 주문 목록을 감싸는 컨테이너 스타일 */
   max-width: 600px;
   margin: 20px;
   padding: 20px;
@@ -97,17 +98,20 @@ export default {
   background-color: #f8f8f8;
 }
 
-h1 {
+.order-container h1 {
+  /* 주문 목록 제목 스타일 */
   font-size: 24px;
   margin-bottom: 20px;
 }
 
-ul {
+.order-container ul {
+  /* 주문 목록을 담는 ul 요소 스타일 */
   list-style-type: none;
   padding: 0;
 }
 
 .order-item {
+  /* 주문 아이템 스타일 */
   display: flex;
   justify-content: space-between;
   padding: 15px;
@@ -117,21 +121,30 @@ ul {
   margin-bottom: 15px;
 }
 
+.order-container button {
+  /* 주문 버튼 스타일 */
+  margin: 0 5px;
+}
+
 .item-name {
+  /* 주문 아이템 이름 스타일 */
   font-size: 18px;
 }
 
 .item-quantity {
+  /* 주문 아이템 수량 스타일 */
   font-size: 16px;
 }
 
 .item-price {
+  /* 주문 아이템 가격 스타일 */
   font-size: 16px;
   font-weight: bold;
   color: #007bff;
 }
 
 .quantity-button {
+  /* 수량 조절 버튼 스타일 */
   padding: 8px 10px;
   border: none;
   border-radius: 5px;
@@ -139,20 +152,19 @@ ul {
 }
 
 .decrease {
+  /* 수량 감소 버튼 스타일 */
   background-color: #dc3545;
   color: white;
 }
 
 .increase {
+  /* 수량 증가 버튼 스타일 */
   background-color: #28a745;
   color: white;
 }
 
-button {
-  margin: 0 5px;
-}
-
 .total-price {
+  /* 총 가격 스타일 */
   font-size: 20px;
   font-weight: bold;
   margin-top: 20px;

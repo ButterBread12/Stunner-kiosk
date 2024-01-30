@@ -1,30 +1,23 @@
 <template>
-  <div class="kiosk-buttons">
-    <v-btn @click="clearAll" class="action-button" color="primary" dark>전체삭제</v-btn>
-    <v-btn @click="openDialog" class="action-button" color="success" dark>{{ totalPrice }}원 결제하기</v-btn>
-    <v-dialog v-model="dialog">
-      <!-- 팝업 창 내용 시작 -->
-      <v-card>
-        <v-card-title>주문 내역 확인</v-card-title>
-        <li v-for="(item, itemName) in orderList" :key="itemName" class="order-item">
-        <div class="item-name">{{ itemName }}</div>
-        <div class="item-price">{{ item.price * item.count }}원</div>
-      </li>
-        <v-card-actions>
-          <v-btn color="primary" dark>결제하기</v-btn>
-          <v-btn @click="closeDialog" color="primary" dark>닫기</v-btn>
-        </v-card-actions>
-      </v-card>
-      <!-- 팝업 창 내용 끝 -->
-    </v-dialog>
+  <div class="kiosk-count">
+    <v-btn @click="clearAll" class="action-button" color="primary" dark x-large>전체 삭제</v-btn>
+    <v-btn @click="openDialog" class="action-button" color="success" dark x-large>{{ totalPrice }}원 결제</v-btn>
+    <checkOrderDialog
+      :dialog="dialog"
+      :orderList="orderList"
+      :totalPrice="totalPrice"
+      @update:dialog="dialog = $event"
+    />
   </div>
-
-  
 </template>
 
 <script>
 import { EventBus } from '../main.js';
+import checkOrderDialog from '../dialogs/checkOrderDialog.vue';
 export default {
+  components: {
+    checkOrderDialog
+  },
   data() {
     return {
       orderList: {},
@@ -34,9 +27,6 @@ export default {
   },
   mounted() {
     EventBus.$on('add-to-cart', this.addToOrder); // 이벤트 버스로 메뉴의 물품 데이터를 받아옴
-    EventBus.$on('sendList', (orderList) => {     // (현재 사용 안함)
-      this.orderList = orderList
-    });
     EventBus.$on('sendItemName', (itemName) => {  // 삭제할 물품의 이름을 받아옴
       this.$delete(this.orderList, itemName);
     });
@@ -48,17 +38,11 @@ export default {
       EventBus.$emit('clearAll');
     },
 
-    checkout() {  // 결제하는 기능의 함수
-      console.log('결제하기');
-      //this.$router.push('/calculateh');
-    },
-
     openDialog() {  // 팝업창을 여는 함수
-      this.dialog = true;
-    },
-
-    closeDialog() { // 팝업창을 닫는 함수
-      this.dialog = false;
+      if (this.totalPrice == 0) {
+        alert("총 금액이 0원입니다. 메뉴를 선택하세요.")
+      }
+      else this.dialog = true;
     },
 
     addToOrder(item) {  // 주문 내역 확인에 물품 데이터를 추가하는 함수
@@ -98,40 +82,24 @@ export default {
       this.totalPrice = newPrice
       console.log("vuex로 받은 합계: ", newPrice)
     }
-},
+  },
 
 };
 </script>
 
 <style scoped>
-.kiosk-buttons {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-  max-width: 600px;
-  margin: 20px;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+.kiosk-count {
+  /* 전체 영역 스타일 */
+  padding: 2em;
+  margin-top: 1em;
   background-color: #f8f8f8;
 }
 
 .action-button {
-  margin-top: 10px;
-  width: 200px;
-  height: 50px;
+  /* 버튼 스타일 */
+  margin-bottom: 0.1em;
+  width: 100%;
+  height: 100%;
   font-size: 18px;
 }
-
-.order-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 15px;
-  background-color: #fff;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 15px;
-}
 </style>
-  

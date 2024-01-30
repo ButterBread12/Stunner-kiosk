@@ -2,7 +2,7 @@
     <section>
       <ul class="category-list">
         <li v-for="(category, index) in categories" :key="index">
-          <button @click="openMenu(category.division)" class="category-item">{{ category.name }}</button>
+          <v-btn x-large @click="openMenu(category.division)" color="primary" class="category-item">{{ category.name }}</v-btn>
         </li>
       </ul>
     </section>
@@ -26,8 +26,8 @@ import { EventBus } from '../main';
       };
     },
     methods: {
-      openMenu(category) {  // 선택한 카테고리의 메뉴를 열기 위해 이벤트버스로 데이터를 보내는 함수
-        EventBus.$emit('sendMenuCatrgory', category);
+      openMenu(category) {
+        EventBus.$emit('sendMenuCategory', category);
         console.log('보낸 카테고리: ', category)
       },
     }
@@ -35,37 +35,20 @@ import { EventBus } from '../main';
 </script>
   
 <style scoped>
-  .category-list {
-    display: flex;
-    overflow-x: auto;
-    padding: 10px;
-    justify-content: center;
-  }
-  
-  .category-item {
-    flex: 0 0 auto;
-    margin-right: 15px;
-    padding: 15px;
-    width: 150px;
-    background-color: #007bff;
-    color: white;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-    cursor: pointer;
-    text-align: center;
-    user-select: none; /* 텍스트 드래그 방지 */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .category-item p {
-    margin-top: 10px;
-  }
-  
-  .category-item:hover {
-    background-color: #4830a8;
-  }
+
+.category-list {
+  /* 카테고리 목록 스타일 */
+  display: flex;
+  justify-content: center;
+  list-style-type: none;
+  padding: 0;
+}
+
+.category-item {
+  /* 카테고리 버튼 스타일 */ 
+  flex: 1;
+  width: 23.5em;
+  user-select: none; /* 텍스트 드래그 방지 */
+  margin-right: 0.1em;
+}
 </style>
-  
