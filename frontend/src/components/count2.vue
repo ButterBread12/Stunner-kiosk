@@ -155,6 +155,7 @@
       resetButtons() {
         this.paymentOptionSelected = false;
       },
+      
       addToOrder(item) {  // 주문 내역 확인에 물품 데이터를 추가하는 함수
         if (!this.orderList[item.p_name]) {
           this.$set(this.orderList, item.p_name, { count: 0, price: 0, unitPrice: item.p_price });

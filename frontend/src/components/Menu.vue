@@ -7,6 +7,7 @@
         </div>
         <div>
           <h2>{{ item.p_name }}</h2>
+          <p class="ingredients">{{ item.p_ingredient }}</p>
           <div class="item-price">{{ Math.floor(item.p_price) }}원</div>
         </div>
       </li>

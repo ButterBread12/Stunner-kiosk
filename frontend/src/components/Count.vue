@@ -2,27 +2,27 @@
   <div class="kiosk-count">
     <v-btn @click="clearAll" class="action-button" color="primary" dark x-large>전체 삭제</v-btn>
     <v-btn @click="openDialog" class="action-button" color="success" dark x-large>{{ totalPrice }}원 결제</v-btn>
-    <checkOrderDialog
-      :dialog="dialog"
-      :orderList="orderList"
-      :totalPrice="totalPrice"
-      @update:dialog="dialog = $event"
-    />
+    <checkOrderDialog :dialog="dialog" :orderList="orderList" :totalPrice="totalPrice" @update:dialog="dialog = $event" />
+    <PayData @update:dialog1="dialog1 = $event"  :totalPrice="totalPrice" @update:dialog2="dialog2 = $event" />
   </div>
 </template>
 
 <script>
 import { EventBus } from '../main.js';
 import checkOrderDialog from '../dialogs/checkOrderDialog.vue';
+import PayData from '../dialogs/PayData.vue'
 export default {
   components: {
-    checkOrderDialog
+    checkOrderDialog,
+    PayData
   },
   data() {
     return {
       orderList: {},
       totalPrice: 0,
       dialog: false,
+      dialog1: false,
+      dialog2: false,
     };
   },
   mounted() {
