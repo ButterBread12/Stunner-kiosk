@@ -1,0 +1,19 @@
+#include <SoftwareSerial.h>
+
+SoftwareSerial bluetoothSerial(2, 3); // RX, TX 핀을 지정
+
+void setup() {
+  Serial.begin(9600);
+  bluetoothSerial.begin(9600); // 블루투스 모듈과의 시리얼 통신을 초기화
+}
+
+void loop() {
+  if (bluetoothSerial.available()) {
+    char receivedChar = bluetoothSerial.read();
+    Serial.print("Received: ");
+    Serial.println(receivedChar);
+
+    // 블루투스로 받은 데이터를 다시 보내기
+    bluetoothSerial.write(receivedChar);
+  }
+}
