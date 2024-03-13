@@ -87,13 +87,14 @@ export default {
       this.localDialog2 = false;
     },
     async pay() {
-      let selectedItems = this.$store.state.items.map(item => `${item.name}(${item.count}개)`).join(', ');
-      setTimeout(async () => {
-        let message = `주문내역: ${selectedItems}\n총 금액: ${this.totalPrice}원`;
+      const selectedItems = this.$store.state.items.map(item => `${item.name}(${item.count}개)`).join(', ');
+      setTimeout(() => {
+        const message = `주문내역: ${selectedItems}\n총 금액: ${this.totalPrice}원`;
         if (confirm(message)) {
+          console.log("message: ", message)
           // API를 호출하여 아두이노로 데이터 전송
-          await axios.post('http://localhost:8000/order', {
-            message: message
+          axios.post('http://localhost:8000/order', {
+            message: message            
           });
         }
         this.$store.commit('delAllItem');
@@ -101,15 +102,15 @@ export default {
       }, 1000);
     },
 
-    /* pay() {
-       // 장바구니에 담긴 물품 문자열로 반환 및 결제 완료 후 장바구니의 모든 아이템을 삭제
-       let selectedItems = this.$store.state.items.map(item => `${item.name}(${item.count}개)`).join(', ');
-       setTimeout(() => {
-         alert(`주문내역: ${selectedItems}\n총 금액: ${this.totalPrice}원\n감사합니다. 결제가 완료되었습니다.`);
-         this.$store.commit('delAllItem');
-         location.href = "http://localhost:8080/"; //알림창으로 표시 후 메인페이지로 돌아가기
-       }, 1000); // 1초 후에 실행되도록 하는 함수
-     },*/
+   /* pay() {
+      // 장바구니에 담긴 물품 문자열로 반환 및 결제 완료 후 장바구니의 모든 아이템을 삭제
+      let selectedItems = this.$store.state.items.map(item => `${item.name}(${item.count}개)`).join(', ');
+      setTimeout(() => {
+        alert(`주문내역: ${selectedItems}\n총 금액: ${this.totalPrice}원\n감사합니다. 결제가 완료되었습니다.`);
+        this.$store.commit('delAllItem');
+        location.href = "http://localhost:8080/"; //알림창으로 표시 후 메인페이지로 돌아가기
+      }, 1000); // 1초 후에 실행되도록 하는 함수
+    },*/
   }
 }
 </script>
