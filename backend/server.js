@@ -8,15 +8,15 @@ const app = express();
 const port = 8000;
 app.use(bodyParser.json());
 
-const serialPort = 'COM8';  // 사용하는 시리얼 포트로 변경해 주세요.
+/*const serialPort = 'COM8';  // 사용하는 시리얼 포트로 변경해 주세요.
 const baudRate = 9600;  // 통신 속도를 필요에 맞게 변경해 주세요.
-const port2 = new SerialPort({ path: serialPort, baudRate: baudRate });
+const port2 = new SerialPort({ path: serialPort, baudRate: baudRate });*/
 
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
   database: 'kiosk',
-  password: 'database',
+  password: 'goldenglow290$',
   port: 5432,
 });
 
