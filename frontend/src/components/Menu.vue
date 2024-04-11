@@ -1,17 +1,17 @@
 <template>
   <div class="kiosk-menu">
-    <ul>
-      <li v-for="item in shoppingCart" :key="item.id" class="menu-item" @click="addToCart(item)">
-        <div>
-          <img :src="item.p_photourl" alt="Product Image" class="product-image"/>
-        </div>
-        <div>
+    <div class="grid-container">
+      <div v-for="item in paginatedItems" :key="item.id" class="grid-item" @click="addToCart(item)">
+        <div class="product-info">
+          <img :src="item.p_photourl" alt="Product Image" class="product-image" />
           <h2>{{ item.p_name }}</h2>
           <p class="ingredients">{{ item.p_ingredient }}</p>
-          <div class="item-price">{{ Math.floor(item.p_price) }}원</div>
         </div>
-      </li>
-    </ul>
+        <div class="item-price">{{ Math.floor(item.p_price) }}원</div>
+      </div>
+      <button @click="prevPage" class="page-btn">이전</button>
+      <button @click="nextPage" class="page-btn">다음</button>
+    </div>
   </div>
 </template>
 
@@ -22,25 +22,34 @@ import { EventBus } from '../main';
 export default {
   data() {
     return {
+      currentPage: 0,
+      itemsPerPage: 9, // 3x3 행렬
       shoppingCart: [],
     };
+  },
+  computed: {
+    paginatedItems() {
+      const start = this.currentPage * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.shoppingCart.slice(start, end);
+    }
   },
   mounted() {
     EventBus.$on('sendMenuCategory', this.getDataFromServer);
   },
   methods: {
-    addToCart(item) { // 장바구니에 추가 버튼을 누르면 선택한 물품을 다른 컴포넌트에 보내는 함수
-      if (item.p_division == 'set') { // 세트메뉴 선택 시 이 루프 내에서 해결
+    addToCart(item) {
+      if (item.p_division == 'set') {
         this.settingSetMenu(item);
       }
       EventBus.$emit('add-to-cart', item);
     },
 
-    settingSetMenu(item) {  // 세트메뉴를 설정하는 함수
-      alert(`이것은 ${item.p_name}다.`)
+    settingSetMenu(item) {
+      //alert(`이것은 ${item.p_name}다.`)
     },
 
-    async getDataFromServer(category) { // 서버의 데이터를 비동기로 가져오는 함수
+    async getDataFromServer(category) {
       try {
         const response = await axios.get(`http://localhost:8000/data/${category}`);
         const data = response.data;
@@ -50,70 +59,81 @@ export default {
         console.error('데이터를 가져오는 중 오류 발생:', error);
       }
     },
+    nextPage() {
+      if ((this.currentPage + 1) * this.itemsPerPage < this.shoppingCart.length) {
+        this.currentPage++;
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 0) {
+        this.currentPage--;
+      }
+    }
   },
 };
 </script>
 
 <style scoped>
-.kiosk-menu { 
-  /* 메뉴 전체 영역 스타일 */
-  background-color: #f8f8f8;
-  padding: 1.25em;
-  border-radius: 0.625em;
-  box-shadow: 0 0 0.625em rgba(0, 0, 0, 0.1);
-  flex: 1 1 50%;
+.kiosk-menu {
+  background-color: #f0f0f0; /* 변경된 배경색 */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.kiosk-menu ul {  
-  /* 목록 스타일 초기화 */
-  list-style-type: none;
-  padding: 0;
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
-.menu-item {
-  /* 각 메뉴 항목 스타일 */
-  max-width: 40%;
-  justify-content: space-between;
-  padding: 0.9375em;
-  background-color: #fff;
-  border-radius: 0.3125em;
-  box-shadow: 0 0.125em 0.25em rgba(0, 0, 0, 0.1);
-  margin-bottom: 0.9375em;
+.grid-item {
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  display: inline-block;
-  margin-right: 0.1875em;
-  flex-wrap: wrap; /* 요소가 너무 많을 때 다음 줄로 넘어갈 수 있도록 설정 */
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out;
 }
 
-.menu-item:active {
-  /* 메뉴 항목 클릭 시 활성화 스타일 */
-  background-color: rgba(0, 0, 0, 0.1);
+.grid-item:hover {
+  transform: translateY(-5px);
 }
 
-.menu-item h2 {
-  /* 메뉴 항목 이름 스타일 */
-  margin: 0;
-  font-size: 1.125em;
+.product-info {
+  padding: 20px;
+}
+
+.product-image {
+  width: 100%;
+  height: auto;
+  border-radius: 5px 5px 0 0;
 }
 
 .ingredients {
-  /* 메뉴 항목 재료 스타일 */
-  margin: 0.3125em 0;
-  font-size: 0.875em;
+  margin-top: 5px;
   color: #555;
 }
 
 .item-price {
-  /* 메뉴 항목 가격 스타일 */
-  flex: 1;
-  font-size: 1.125em;
-  font-weight: bold;
-  color: #007bff;
+  background-color: #007bff; /* 변경된 가격 배경색 */
+  color: #fff;
+  padding: 10px;
+  border-radius: 0 0 5px 5px;
+  text-align: center;
 }
 
-.product-image {
-  /* 메뉴 항목 이미지 스타일 */
-  width: 20%;
-  height: auto;
+.page-btn {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.page-btn:hover {
+  background-color: #0056b3;
 }
 </style>
