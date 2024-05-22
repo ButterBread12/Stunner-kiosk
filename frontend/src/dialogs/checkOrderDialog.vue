@@ -8,11 +8,13 @@
         <span>수량</span>
         <span>금액</span>
       </v-card>
-      <li v-for="(item, itemName) in orderList" :key="itemName" class="order-item">
-        <div class="item-name">{{ itemName }}</div>
-        <div class="item-count">{{ item.count }}</div>
-        <div class="item-price">{{ item.price * item.count }}원</div>
-      </li><br><br>
+      <ul class="order-list">
+        <li v-for="(item, itemName) in orderList" :key="itemName" class="order-item">
+          <div class="item-name">{{ itemName }}</div>
+          <div class="item-count">{{ item.count }}</div>
+          <div class="item-price">{{ item.price * item.count }}원</div>
+        </li>
+      </ul>
       <v-card class="total-price">
         <span class="total-price-label">결제 금액</span>
         <span class="total-price-value">{{ totalPrice }}원</span>
@@ -20,28 +22,28 @@
       <v-card-actions class="card-actions">
         <v-btn v-if="!paymentOptionSelected" class="pay-btn" @click="selectOption('매장')">
           <v-img src="https://cdn-icons-png.flaticon.com/512/5452/5452940.png" height="30" width="30"></v-img>
-          <span style="color: black;">매장</span>
+          <span>매장</span>
         </v-btn>
         <v-btn v-if="!paymentOptionSelected" class="pay-btn" @click="selectOption('포장')">
           <v-img src="https://cdn-icons-png.flaticon.com/512/3081/3081098.png" height="30" width="30"></v-img>
-          <span style="color: black;">포장</span>
+          <span>포장</span>
         </v-btn>
         <v-btn v-if="paymentOptionSelected" class="pay-btn" @click="selectPayment('카드결제')">
           <v-img src="https://cdn-icons-png.flaticon.com/512/4341/4341764.png" height="30" width="30"></v-img>
-          <span style="color: black;">카드결제</span>
+          <span>카드결제</span>
         </v-btn>
         <v-btn v-if="paymentOptionSelected" class="pay-btn" @click="selectPayment('쿠폰결제')">
           <v-img src="https://cdn-icons-png.flaticon.com/512/2089/2089363.png" height="30" width="30"></v-img>
-          <span style="color: black;">쿠폰결제</span>
+          <span>쿠폰결제</span>
         </v-btn>
-        <v-btn dark @click="resetButtons">뒤로가기</v-btn>
-        <v-btn @click="closeDialog" class="close-btn" dark>닫기</v-btn>
+        <v-btn class="back-btn" @click="resetButtons">뒤로가기</v-btn>
+        <v-btn class="close-btn" @click="closeDialog">닫기</v-btn>
       </v-card-actions>
     </v-card>
     <!-- 팝업 창 내용 끝 -->
   </v-dialog>
 </template>
-  
+
 <script>
 import { EventBus } from '../main.js';
 export default {
@@ -57,62 +59,78 @@ export default {
     };
   },
   mounted() {
-    EventBus.$on('select-option', (option) => { // (매장/포장) 옵션 중 하나 선택하면 (카드 결제/쿠폰결제) 옵션을 불러오기
+    EventBus.$on('select-option', (option) => {
       this.paymentOptionSelected = true;
     });
   },
   methods: {
-    checkout() {  // 결제하는 기능의 함수
+    checkout() {
       console.log('Checkout');
     },
-    closeDialog() {   // 팝업창을 닫는 함수
+    closeDialog() {
       this.$emit('update:dialog', false);
     },
-    selectOption(option) {  // (매장/포장) 옵션을 선택하는 함수
+    selectOption(option) {
       console.log('선택한 옵션:', option);
       EventBus.$emit('select-option', option);
     },
-    selectPayment(method) { // (카드 결제/쿠폰결제) 옵션을 선택하는 함수
+    selectPayment(method) {
       console.log('선택한 결제 방식:', method);
       EventBus.$emit('select-payment', method);
       if (method === '카드결제') {
         this.$emit('update:dialog1', true);
-      }
-      else if (method === '쿠폰결제') {
+      } else if (method === '쿠폰결제') {
         this.$emit('update:dialog2', true);
       }
     },
-    resetButtons() { // (카드 결제/쿠폰결제) 옵션에서 (매장/포장) 옵션으로 돌아가는 함수
+    resetButtons() {
       this.paymentOptionSelected = false;
     },
   }
 }
 </script>
-  
+
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
 .order-summary {
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
   background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  font-family: 'Roboto', sans-serif;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .order-summary-title {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: bold;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #2c3e50;
 }
 
 .order-details {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
-  font-size: 16px;
-  background-color: #eee;
-  padding: 10px;
-  border-radius: 5px;
+  margin-bottom: 15px;
+  font-size: 18px;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.order-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
 .order-item {
@@ -120,8 +138,10 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 5px;
+  padding: 15px;
+  border-radius: 10px;
+  background-color: #f8f9fa;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .item-name,
@@ -132,39 +152,77 @@ export default {
 }
 
 .item-count {
-  margin-left: 35px;
   text-align: center;
 }
 
 .item-price {
   text-align: right;
   font-weight: bold;
+  color: #27ae60;
 }
 
 .total-price {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
-  margin-top: 15px;
-  padding: 10px;
-  border-radius: 5px;
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border: 2px solid #3498db;
+  background-color: #ecf9ff;
 }
 
 .total-price-label {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .total-price-value {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: bold;
+  color: #e74c3c;
 }
 
 .card-actions {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  justify-content: space-around;
+  margin-top: 30px;
 }
-</style> 
+
+.pay-btn {
+  display: flex;
+  align-items: center;
+  background-color: #3498db;
+  color: black;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 30px;
+  padding: 12px 25px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.pay-btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-3px);
+}
+
+.back-btn, .close-btn {
+  background-color: #e74c3c;
+  color: black;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 30px;
+  padding: 12px 25px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.back-btn:hover, .close-btn:hover {
+  background-color: #c0392b;
+  transform: translateY(-3px);
+}
+
+.close-btn {
+  margin-left: 10px;
+}
+</style>

@@ -3,7 +3,7 @@
     <!-- 카드결제화면 -->
     <v-dialog v-model="localDialog1" class="payment-dialog">
       <v-card class="order-summary">
-        <v-card-title>카드 결제</v-card-title>
+        <v-card-title class="order-summary-title">카드 결제</v-card-title>
         <v-card class="payment-content">
           <h3>다음 그림과 같이 신용/체크카드를 넣어주세요</h3>
           <v-img src="https://cdn0.iconfinder.com/data/icons/business-collection-2027/60/atm-1-512.png" height="200"
@@ -14,7 +14,7 @@
           <span class="total-price-value">{{ totalPrice }}원</span>
         </v-card>
         <v-card-actions class="card-actions">
-          <v-btn @click="pay" height="10" width="50" class="cardbox" dark>
+          <v-btn @click="pay" class="pay-btn" dark>
             <v-img src="../components/p/card_insert_moving.png" height="100" width="100" class="movecard"></v-img>
           </v-btn>
           <v-btn @click="closeDialog" class="close-btn" dark>닫기</v-btn>
@@ -25,7 +25,7 @@
     <!-- 쿠폰결제화면 -->
     <v-dialog v-model="localDialog2" class="payment-dialog">
       <v-card class="order-summary">
-        <v-card-title>쿠폰 결제</v-card-title>
+        <v-card-title class="order-summary-title">쿠폰 결제</v-card-title>
         <v-card class="payment-content">
           <h3>쿠폰의 바코드를 대주세요</h3><br>
           <v-img src="https://cdn-icons-png.flaticon.com/512/25/25350.png" height="180" width="400"></v-img><br>
@@ -35,7 +35,7 @@
           <span class="total-price-value">{{ totalPrice }}원</span>
         </v-card>
         <v-card-actions class="card-actions">
-          <v-btn @click="pay" height="70" width="100" dark>
+          <v-btn @click="pay" class="pay-btn" dark>
             <v-img max-width="90" src="../components/p/barcode.png"></v-img>
           </v-btn>
           <v-btn @click="closeDialog" class="close-btn" dark>닫기</v-btn>
@@ -101,40 +101,58 @@ export default {
         location.href = "http://localhost:8080/";
       }, 1000);
     },
-
-   /* pay() {
-      // 장바구니에 담긴 물품 문자열로 반환 및 결제 완료 후 장바구니의 모든 아이템을 삭제
-      let selectedItems = this.$store.state.items.map(item => `${item.name}(${item.count}개)`).join(', ');
-      setTimeout(() => {
-        alert(`주문내역: ${selectedItems}\n총 금액: ${this.totalPrice}원\n감사합니다. 결제가 완료되었습니다.`);
-        this.$store.commit('delAllItem');
-        location.href = "http://localhost:8080/"; //알림창으로 표시 후 메인페이지로 돌아가기
-      }, 1000); // 1초 후에 실행되도록 하는 함수
-    },*/
   }
 }
 </script>
-  
+
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
 .order-summary {
   max-width: 600px;
   margin: 0 auto;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  font-family: 'Roboto', sans-serif;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.order-summary-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #34495e;
+}
+
+.payment-content h3 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #34495e;
+}
+
+.payment-content img {
+  margin-bottom: 20px;
 }
 
 .total-price {
   font-size: 18px;
   font-weight: bold;
-  margin-top: 15px;
-  padding: 10px;
-  border-radius: 5px;
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border: 2px solid #3498db;
+  background-color: #ecf9ff;
 }
 
 .total-price-label {
@@ -144,22 +162,45 @@ export default {
 .total-price-value {
   font-size: 18px;
   font-weight: bold;
+  color: #e74c3c;
 }
 
 .card-actions {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  justify-content: space-around;
+  margin-top: 30px;
 }
 
 .pay-btn {
-  background-color: #4caf50;
-  color: #fff;
+  display: flex;
+  align-items: center;
+  background-color: #3498db;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 25px;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.pay-btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-3px);
 }
 
 .close-btn {
-  background-color: #f44336;
-  color: #fff;
+  background-color: #e74c3c;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  border-radius: 25px;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.close-btn:hover {
+  background-color: #c0392b;
+  transform: translateY(-3px);
 }
 
 .payment-dialog {
@@ -175,16 +216,13 @@ export default {
   justify-content: center;
 }
 
-.cardbox {
-  left: 30px;
-  top: -25px;
-}
-
 .movecard {
   top: 25px;
 }
 
 .bartext {
-  margin-left: 12px;
+  margin-top: 20px;
+  text-align: center;
+  color: #34495e;
 }
-</style> 
+</style>

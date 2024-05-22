@@ -7,10 +7,20 @@
           <h2>{{ item.p_name }}</h2>
           <p class="ingredients">{{ item.p_ingredient }}</p>
         </div>
-        <div class="item-price">{{ Math.floor(item.p_price) }}원</div>
+        <div class="item-price" :class="{'discounted': item.p_discount}">
+          <div v-if="item.p_discount">
+            <span class="original-price">{{ Math.floor(item.p_price) }}원</span>
+            <span class="discounted-price">{{ Math.floor(discountedPrice(item)) }}원</span>
+          </div>
+          <div v-else>
+            {{ Math.floor(item.p_price) }}원
+          </div>
+        </div>
       </div>
-      <button @click="prevPage" class="page-btn">이전</button>
-      <button @click="nextPage" class="page-btn">다음</button>
+    </div>
+    <div class="pagination-buttons">
+      <v-btn @click="prevPage" color="primary" class="page-btn">이전</v-btn>
+      <v-btn @click="nextPage" color="primary" class="page-btn">다음</v-btn>
     </div>
   </div>
 </template>
@@ -23,7 +33,7 @@ export default {
   data() {
     return {
       currentPage: 0,
-      itemsPerPage: 9, // 3x3 행렬
+      itemsPerPage: 12, // 2x6 행렬
       shoppingCart: [],
     };
   },
@@ -46,7 +56,7 @@ export default {
     },
 
     settingSetMenu(item) {
-      //alert(`이것은 ${item.p_name}다.`)
+      // alert(`이것은 ${item.p_name}다.`)
     },
 
     async getDataFromServer(category) {
@@ -68,72 +78,109 @@ export default {
       if (this.currentPage > 0) {
         this.currentPage--;
       }
+    },
+    discountedPrice(item) {
+      return item.p_price - (item.p_price * (item.p_discount / 100));
     }
   },
 };
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
 .kiosk-menu {
-  background-color: #f0f0f0; /* 변경된 배경색 */
+  background-color: #ffffff;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Roboto', sans-serif;
 }
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 20px;
 }
 
 .grid-item {
-  background-color: #ffffff;
-  border-radius: 5px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  overflow: hidden;
-  transition: transform 0.3s ease-in-out;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  height: 100%;
 }
 
 .grid-item:hover {
-  transform: translateY(-5px);
+  transform: translateY(-10px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .product-info {
   padding: 20px;
+  text-align: center;
 }
 
 .product-image {
   width: 100%;
   height: auto;
-  border-radius: 5px 5px 0 0;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .ingredients {
-  margin-top: 5px;
-  color: #555;
+  margin-top: 10px;
+  color: #777;
 }
 
 .item-price {
-  background-color: #007bff; /* 변경된 가격 배경색 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #ff6f61;
   color: #fff;
-  padding: 10px;
-  border-radius: 0 0 5px 5px;
-  text-align: center;
+  padding: 15px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  font-weight: bold;
+  margin-top: auto; /* Flexbox를 사용하여 item-price를 아래로 이동 */
 }
 
-.page-btn {
-  background-color: #007bff;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+.original-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 14px;
+}
+
+.discounted-price {
+  font-size: 18px;
+  color: #ff0000;
+}
+
+.pagination-buttons {
+  display: flex;
+  justify-content: center;
   margin-top: 20px;
 }
 
+.page-btn {
+  padding: 15px 30px;
+  margin: 0 10px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease-in-out;
+}
+
 .page-btn:hover {
-  background-color: #0056b3;
+  background-color: #ff6f61;
+  color: #fff;
 }
 </style>
