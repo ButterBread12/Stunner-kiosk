@@ -31,6 +31,7 @@ export default {
     EventBus.$on('sendItemName', (itemName) => {  // 삭제할 물품의 이름을 받아옴
       this.$delete(this.orderList, itemName);
     });
+    EventBus.$on('openWindow', this.openDialog);
   },
   methods: {
     clearAll() {  // 물품 데이터 전체를 삭제하는 함수

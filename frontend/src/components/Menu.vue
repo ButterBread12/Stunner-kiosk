@@ -46,6 +46,8 @@ export default {
   },
   mounted() {
     EventBus.$on('sendMenuCategory', this.getDataFromServer);
+    EventBus.$on('prev', this.prevPage);
+    EventBus.$on('next', this.nextPage);
   },
   methods: {
     addToCart(item) {
