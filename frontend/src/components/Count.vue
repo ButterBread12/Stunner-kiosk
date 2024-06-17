@@ -32,6 +32,7 @@ export default {
       this.$delete(this.orderList, itemName);
     });
     EventBus.$on('openWindow', this.openDialog);
+    EventBus.$on('deleteOrder', this.clearAll);
   },
   methods: {
     clearAll() {  // 물품 데이터 전체를 삭제하는 함수

@@ -26,113 +26,54 @@ export default {
   data() {
     return {
       orderList: {},
-      dialog: false,
-      //recognition: null,
     };
   },
   mounted() {
-    //this.startRecognition();
-    EventBus.$on('add-to-cart', this.addToOrder);   // 이벤트 버스로 메뉴의 물품 데이터를 받아옴
-    EventBus.$on('clearAll', this.clearOrderList);  // count 컴포넌트에서 전체삭제 버튼을 누를 경우 이벤트 버스를 받아옴
+    EventBus.$on('add-to-cart', this.addToOrder);
+    EventBus.$on('clearAll', this.clearOrderList);
   },
   computed: {
     totalPrice() {
-      const total = Object.values(this.orderList).reduce((total, item) => total + item.price, 0);
-      return total
+      return Object.values(this.orderList).reduce((total, item) => total + item.price, 0);
     },
   },
   watch: {
-    totalPrice(newPrice) {  // 합계를 vuex로 전달하는 함수
+    totalPrice(newPrice) {
       this.$store.commit('updateTotalPrice', newPrice);
     },
   },
   methods: {
-    removeItem(name) {
-      this.orderList = this.orderList.filter(item => item.name !== name);
-    },
     clearOrderList() {
-      this.orderList = [];
+      this.orderList = {};
+      this.$store.commit('clearOrderList'); // Vuex 스토어 초기화
     },
     placeOrder() {
       // 주문 로직 추가
     },
-    addToOrder(item) {  // 주문 목록에 물품 데이터를 추가하는 함수
-      if (!this.orderList[item.p_name]) { // orderList에 데이터가 없으면
+    addToOrder(item) {
+      if (!this.orderList[item.p_name]) {
         this.$set(this.orderList, item.p_name, { name: item.p_name, count: 0, price: 0, unitPrice: item.p_price });
         this.$store.commit('addItem', this.orderList[item.p_name]);
-        console.log("추가된 물품: ", this.orderList[item.p_name])
       }
       this.orderList[item.p_name].count += 1;
       this.orderList[item.p_name].price = this.orderList[item.p_name].unitPrice * this.orderList[item.p_name].count;
     },
-    decreaseCount(itemName) { // 물품 개수를 감소하는 함수
+    decreaseCount(itemName) {
       if (this.orderList[itemName].count > 1) {
         this.orderList[itemName].count -= 1;
         this.orderList[itemName].price = this.orderList[itemName].unitPrice * this.orderList[itemName].count;
-        //this.$store.commit('updateItemPrice', itemName, this.orderList[itemName].price); (필요 없음)
-        console.log("이름: ", itemName, "가격: ", this.orderList[itemName].price)
       } else {
         this.deleteItem(itemName);
       }
     },
-
-    increaseCount(itemName) { // 물품 개수를 증가하는 함수
+    increaseCount(itemName) {
       this.orderList[itemName].count += 1;
       this.orderList[itemName].price = this.orderList[itemName].unitPrice * this.orderList[itemName].count;
-      //this.$store.commit('updateItemPrice', {itemName: itemName, price: this.orderList[itemName].price}); (필요 없음)
-      console.log("이름: ", itemName, "가격: ", this.orderList[itemName].price)
     },
-
-    deleteItem(itemName) {  // 물품을 삭제하는 함수
+    deleteItem(itemName) {
       this.$delete(this.orderList, itemName);
       this.$store.commit('delItem', itemName);
       EventBus.$emit('sendItemName', itemName);
-    },
-
-    clearOrderList() {  // 주문목록 내의 물품 전체를 삭제하는 함수
-      this.orderList = {};
-    },
-    startRecognition() {
-      this.recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-      this.recognition.lang = 'ko-KR';
-      this.recognition.start();
-
-      this.recognition.onresult = async (event) => {
-        const speechResult = event.results[0][0].transcript;
-        console.log('Result:', speechResult);
-
-        const response = await fetch('http://localhost:5001/recognize', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ speech: speechResult }),
-        });
-
-        const data = await response.json();
-        console.log('Order data:', data);
-
-        if (data.item === '더블 불고기 버거') {
-          if (data.type === 'add' || data.type === 'new') {
-            //this.addItemToOrder(data.item, 5400, data.count);
-            const response = await axios.get(`http://localhost:8000/price/${data.item}`);
-            data.p_name = data.item;
-            data.p_price = response.data;
-            console.log('price:', data.p_price)
-            EventBus.$emit('add-to-cart', data);
-            EventBus.$emit('openWindow');
-          }
-        }
-      };
-
-      this.recognition.onerror = (event) => {
-        console.error('Speech recognition error:', event);
-      };
-
-      // 음성 인식이 종료될 때 다시 시작
-      this.recognition.onend = () => {
-        this.recognition.start();
-      };
     },
   },
 };
@@ -140,7 +81,6 @@ export default {
 
 <style scoped>
 .order-container {
-  /* 주문 목록을 감싸는 컨테이너 스타일 */
   max-width: 600px;
   margin: 20px;
   padding: 20px;
@@ -150,19 +90,16 @@ export default {
 }
 
 .order-container h1 {
-  /* 주문 목록 제목 스타일 */
   font-size: 24px;
   margin-bottom: 20px;
 }
 
 .order-container ul {
-  /* 주문 목록을 담는 ul 요소 스타일 */
   list-style-type: none;
   padding: 0;
 }
 
 .order-item {
-  /* 주문 아이템 스타일 */
   display: flex;
   justify-content: space-between;
   padding: 15px;
@@ -173,29 +110,24 @@ export default {
 }
 
 .order-container button {
-  /* 주문 버튼 스타일 */
   margin: 0 5px;
 }
 
 .item-name {
-  /* 주문 아이템 이름 스타일 */
   font-size: 18px;
 }
 
 .item-quantity {
-  /* 주문 아이템 수량 스타일 */
   font-size: 16px;
 }
 
 .item-price {
-  /* 주문 아이템 가격 스타일 */
   font-size: 16px;
   font-weight: bold;
   color: #007bff;
 }
 
 .quantity-button {
-  /* 수량 조절 버튼 스타일 */
   padding: 8px 10px;
   border: none;
   border-radius: 5px;
@@ -203,19 +135,16 @@ export default {
 }
 
 .decrease {
-  /* 수량 감소 버튼 스타일 */
   background-color: #dc3545;
   color: white;
 }
 
 .increase {
-  /* 수량 증가 버튼 스타일 */
   background-color: #28a745;
   color: white;
 }
 
 .total-price {
-  /* 총 가격 스타일 */
   font-size: 20px;
   font-weight: bold;
   margin-top: 20px;
