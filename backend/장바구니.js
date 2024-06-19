@@ -15,7 +15,7 @@ const pool = new Pool({
 app.get('/api/data', async (req, res) => {
   try {
     const client = await pool.connect();
-    const result = await client.query('SELECT * FROM hamburgers'); // 테이블 이름을 실제 테이블 이름으로 변경
+    const result = await client.query('SELECT * FROM menu'); // 테이블 이름을 실제 테이블 이름으로 변경
     const data = result.rows;
     client.release();
 
@@ -29,3 +29,13 @@ app.get('/api/data', async (req, res) => {
 app.listen(port, () => {
   console.log(`서버가 http://localhost:${port} 에서 실행 중입니다.`);
 });
+
+
+
+conn = psycopg2.connect(
+  dbname="postgres",
+  user="postgres",
+  host="localhost",
+  password="tlswo3850",
+  port="5432"
+)
